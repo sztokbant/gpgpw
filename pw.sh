@@ -10,7 +10,23 @@ PWFILE="/Full/path/of/your/password/file.asc"
 TMPFILE="/Full/path/for/unencrypted/tmp/file.txt"
 GPGKEY="email.of@your.gpg.key"
 
+do_cleanup() {
+  $SHRED $TMPFILE
+}
+
+do_encrypt() {
+  $GPG -o $PWFILE -r $GPGKEY -e $TMPFILE
+}
+
 case $1 in
+"init")
+  if [ ! -f $PWFILE ]; then
+    touch $TMPFILE && do_encrypt && do_cleanup
+  else
+    echo "$PWFILE already exists. Aborting."
+  fi
+  ;;
+
 "show")
   $GPG -d $PWFILE
   ;;
@@ -23,13 +39,13 @@ case $1 in
   done
 
   if [ "$command" = "save" ]; then
-    $GPG -o $PWFILE -r $GPGKEY -e $TMPFILE && $SHRED $TMPFILE
+    do_encrypt && do_cleanup
   elif [ "$command" = "discard" ]; then
-    $SHRED $TMPFILE
+    do_cleanup
   fi
   ;;
 
 *)
-  echo "Usage: `basename $0` [show|edit]"
+  echo "Usage: `basename $0` [init|show|edit]"
   ;;
 esac
