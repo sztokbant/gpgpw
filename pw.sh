@@ -15,7 +15,7 @@ do_cleanup() {
 }
 
 do_encrypt() {
-  $GPG -o $PWFILE -r $GPGKEY -e $TMPFILE
+  $GPG --yes -o $PWFILE -r $GPGKEY -e $TMPFILE
 }
 
 case $1 in
