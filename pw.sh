@@ -19,19 +19,14 @@ do_encrypt() {
 }
 
 case $1 in
-"init")
-  if [ ! -f $PWFILE ]; then
-    touch $TMPFILE && do_encrypt && do_cleanup
-  else
-    echo "$PWFILE already exists. Aborting."
-  fi
-  ;;
-
 "show")
   $GPG -d $PWFILE
   ;;
 
 "edit")
+  if [ ! -f $PWFILE ]; then
+    touch $TMPFILE && do_encrypt && do_cleanup
+  fi
   $GPG -o $TMPFILE -d $PWFILE && $EDITOR $TMPFILE
   while [ "$command" != "save" ] && [ "$command" != "discard" ]; do
     echo "Please enter either \"save\" or \"discard\": \c"
@@ -46,6 +41,6 @@ case $1 in
   ;;
 
 *)
-  echo "Usage: `basename $0` [init|show|edit]"
+  echo "Usage: `basename $0` [show|edit]"
   ;;
 esac
