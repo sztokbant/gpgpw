@@ -3,7 +3,7 @@
 # Bin config
 GPG="/usr/local/bin/gpg"
 EDITOR="vi"
-SHRED="rm -P" # on Linux use "shred -vz"
+SHRED="rm -P" # on Linux use "shred -uz"
 
 # Personal config
 PWFILE="/Full/path/of/your/password/file.asc"
